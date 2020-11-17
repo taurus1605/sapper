@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+config.h
+lib.h
+*.qbs
+*.qbs.user
+*.autosave
