@@ -11,10 +11,12 @@
 class Out_box_with_pw : public Graph_lib::Out_box
 {
 public:
-    Out_box_with_pw (Graph_lib::Point p, int w, int h):
-        Graph_lib::Out_box{p, w, h, ""} { }
-    Fl_Widget* get_pw(){return pw;}
+  Out_box_with_pw (Graph_lib::Point p, int w, int h)
+    : Graph_lib::Out_box{ p, w, h, "" }
+  { }
+  Fl_Widget* get_pw () { return pw; }
 };
+
 
 class Clock_shape : public Out_box_with_pw
 {

@@ -7,8 +7,9 @@
 
 
 Clock_shape::Clock_shape (Graph_lib::Point p, int w, int h)
-  : Out_box_with_pw{p, w, h}
+  : Out_box_with_pw{ p, w, h }
 { }
+
 
 int get_local_time ()
 {
