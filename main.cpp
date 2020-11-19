@@ -7,8 +7,6 @@ try
 {
   Sapper sss{ Graph_lib::Point(100, 100) };
 
-  std::cout << sizeof (sss);
-
   return Graph_lib::gui_main();
 }
 catch (std::exception& e)

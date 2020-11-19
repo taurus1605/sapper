@@ -211,7 +211,7 @@ void Sapper::clicked (void *widget)
   if (c.is_opened()) return;
   if (click == 3)
   {
-    if (flags_counter == 0) return;
+    if (flags_counter == 0 && !c.is_flaged()) return;
     c.set_flag(!c.is_flaged());
     if (!c.is_flaged())
     {
