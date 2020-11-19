@@ -1,5 +1,4 @@
 ﻿#include "clock_shape.h"
-#include "lib.h"
 
 #include <ctime>
 #include <sstream>
@@ -8,7 +7,7 @@
 
 
 Clock_shape::Clock_shape (Graph_lib::Point p, int w, int h)
-  : Graph_lib::Out_box{ p, w, h, "" }
+  : Out_box_with_pw{p, w, h}
 { }
 
 int get_local_time ()
@@ -25,7 +24,7 @@ int get_local_time ()
 std::string time_style (int mm, int ss)
 {
   std::stringstream sstr;
-
+  sstr<<"                   ";
   if (mm / 10 == 0)
     sstr << "0" << mm << ":";
   else

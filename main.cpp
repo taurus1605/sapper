@@ -1,24 +1,19 @@
-﻿#include <iostream>
-
-#include "constants.h"
-#include "lib.h"
-#include "game.h"
-
+﻿#include "miner.h"
+#include <iostream>
 
 int main()
 try
 {
-  Sapper game{ Graph_lib::Point(200, 200) };
-
+  Sapper sss{Graph_lib::Point(100,100)};
+  std::cout << sizeof (sss);
   return Graph_lib::gui_main();
 }
 catch (std::exception& e)
 {
-  std::cerr << "Error: " << e.what() << std::endl;
-  return 1;
+  std::cerr << e.what() << std::endl;
 }
 catch (...)
 {
-  std::cerr << "Something went wrong." << std::endl;
-  return 2;
+  std::cerr << "Ooops, smth went wrong. Call to developer!" << std::endl;
 }
+

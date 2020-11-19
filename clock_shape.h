@@ -1,15 +1,22 @@
 ﻿#ifndef SAPPER_CLOCK_SHAPE_H
 #define SAPPER_CLOCK_SHAPE_H
 
-
-#include "lib.h"
-#include "constants.h"
-
 #include <string>
 #include <ctime>
+#include "../_lib/Graph_lib/Graph.h"
+#include "../_lib/Graph_lib/Window.h"
+#include "../_lib/Graph_lib/GUI.h"
 
 
-class Clock_shape : public Graph_lib::Out_box
+class Out_box_with_pw : public Graph_lib::Out_box
+{
+public:
+    Out_box_with_pw (Graph_lib::Point p, int w, int h):
+        Graph_lib::Out_box{p, w, h, ""} { }
+    Fl_Widget* get_pw(){return pw;}
+};
+
+class Clock_shape : public Out_box_with_pw
 {
 public:
   Clock_shape (Graph_lib::Point p, int w, int h);

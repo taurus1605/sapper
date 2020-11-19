@@ -5,14 +5,16 @@
 #include <vector>
 #include <functional>
 
-#include "lib.h"
+#include "../_lib/Graph_lib/fltk.h"
+#include "../_lib/Graph_lib/Point.h"
+
 
 template<class T> class Vector_ref_cl
 {
   std::vector<T*> v;
   std::vector<T*> owned;
 
-  public:
+public:
   Vector_ref_cl ()  { }
   Vector_ref_cl (T* a, T* b = nullptr, T* c = nullptr, T* d = nullptr)
   {
@@ -31,12 +33,8 @@ template<class T> class Vector_ref_cl
   {
     v.clear();
     owned.clear();
-  }
-
-  void pop_back ()
-  {
-    v.pop_back();
-    owned.pop_back();
+    v.resize(0);
+    owned.resize(0);
   }
 
   T& operator[] (int i)  { return *v.at(i); }
