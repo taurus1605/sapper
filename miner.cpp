@@ -26,7 +26,7 @@ Sapper::Sapper(Graph_lib::Point p)
     , btn_size_10{ Graph_lib::Point(btn_new_game.loc.x, btn_new_game.loc.y), button_w/3, button_h, "10x10", cb_size_10 }
     , btn_size_15{ Graph_lib::Point(btn_new_game.loc.x + button_w/3, btn_new_game.loc.y), button_w/3, button_h, "15x15", cb_size_15 }
     , btn_size_20{ Graph_lib::Point(btn_new_game.loc.x + 2* button_w/3, btn_new_game.loc.y), button_w/3, button_h, "20x20", cb_size_20 }
-    , game_time{ Graph_lib::Point(x_max()-(side_bar - button_w) / 2 - button_w, margin_top), button_w, 30 }
+    , game_time{ Graph_lib::Point(x_max()-(side_bar - button_w) / 2 - button_w, margin_top), button_w, game_timer_h }
 {
     attach(btn_quit);
     attach(btn_new_game);
