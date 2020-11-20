@@ -25,7 +25,8 @@ int get_local_time ()
 std::string time_style (int mm, int ss)
 {
   std::stringstream sstr;
-  sstr<<"                   ";
+  sstr << "                   ";
+
   if (mm / 10 == 0)
     sstr << "0" << mm << ":";
   else

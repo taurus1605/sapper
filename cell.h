@@ -6,7 +6,6 @@
 #include "../_lib/Graph_lib/GUI.h"
 
 #include <string>
-#include "vector_ref_cl.h"
 
 
 class Button_with_pw : public Graph_lib::Button
@@ -14,7 +13,7 @@ class Button_with_pw : public Graph_lib::Button
 public:
   Button_with_pw (Graph_lib::Point p, int w, int h,
                  const std::string& label,  Graph_lib::Callback cb);
-  Fl_Widget* get_pw() const { return pw; }
+  Fl_Widget* get_pw() const { return pw; } // TODO: отдельная функция
 };
 
 
@@ -34,7 +33,7 @@ public:
   bool is_flaged () const { return flaged; }
   bool is_opened () const { return opened; }
 
-  int bombs_around{ 0 };
+  int bombs_around{ 0 }; // TODO: в отдельные методы
 
   Graph_lib::Image* img_ptr { nullptr };
 
@@ -43,4 +42,5 @@ private:
   bool flaged{ false };
   bool opened{ false };
 };
+
 #endif // CELL_H

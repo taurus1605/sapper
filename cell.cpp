@@ -1,5 +1,5 @@
-﻿#include "cell.h"
-#include <iostream>
+﻿#include "constants.h"
+#include "cell.h"
 
 
 Button_with_pw::Button_with_pw (Graph_lib::Point p, int w, int h,
@@ -11,7 +11,7 @@ Button_with_pw::Button_with_pw (Graph_lib::Point p, int w, int h,
 Cell::Cell (Graph_lib::Point p, int size, Graph_lib::Callback cb)
   : Button_with_pw{ p, size, size,"", cb }
 {
-  set_img("btn_pulled.png");
+  set_img(img_btn_pulled);
 }
 
 void Cell::attach (Graph_lib::Window &win)
