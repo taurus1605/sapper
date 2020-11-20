@@ -6,8 +6,12 @@
 #include <iostream>
 
 
+Out_box_resizable::Out_box_resizable (Graph_lib::Point p, int w, int h)
+  : Graph_lib::Out_box{ p, w, h, "" }
+{ }
+
 Clock_shape::Clock_shape (Graph_lib::Point p, int w, int h)
-  : Out_box_with_pw{ p, w, h }
+  : Out_box_resizable{ p, w, h }
 { }
 
 
@@ -25,7 +29,7 @@ int get_local_time ()
 std::string time_style (int mm, int ss)
 {
   std::stringstream sstr;
-  sstr << "                   ";
+  sstr << "                   "; // indentation brfore time
 
   if (mm / 10 == 0)
     sstr << "0" << mm << ":";
@@ -41,6 +45,13 @@ std::string time_style (int mm, int ss)
 
   return sstr.str();
 }
+
+
+void Out_box_resizable::resize (int w, int h)
+{
+  pw->size(w, h);
+}
+
 
 void Clock_shape::cb_timeout (void* pwin)
 {
@@ -78,7 +89,6 @@ void Clock_shape::clear ()
 {
   put("");
 }
-
 
 void Clock_shape::timeout ()
 {

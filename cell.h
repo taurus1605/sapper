@@ -1,6 +1,7 @@
 ﻿#ifndef CELL_H
 #define CELL_H 1
 
+
 #include "../_lib/Graph_lib/Graph.h"
 #include "../_lib/Graph_lib/Window.h"
 #include "../_lib/Graph_lib/GUI.h"
@@ -8,16 +9,17 @@
 #include <string>
 
 
-class Button_with_pw : public Graph_lib::Button
+class Button_resizable : public Graph_lib::Button
 {
 public:
-  Button_with_pw (Graph_lib::Point p, int w, int h,
+  Button_resizable (Graph_lib::Point p, int w, int h,
                  const std::string& label,  Graph_lib::Callback cb);
-  Fl_Widget* get_pw() const { return pw; } // TODO: отдельная функция
+
+  void resize (int w, int h);
 };
 
 
-class Cell : public Button_with_pw
+class Cell : public Button_resizable
 {
 public:
   Cell(Graph_lib::Point p, int size_, Graph_lib::Callback cb);
@@ -42,5 +44,6 @@ private:
   bool flaged{ false };
   bool opened{ false };
 };
+
 
 #endif // CELL_H

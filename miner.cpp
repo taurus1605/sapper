@@ -15,6 +15,7 @@ std::string str (int i)
   return sstr.str();
 }
 
+
 Sapper::Sapper(Graph_lib::Point p)
   : Graph_lib::Window{ p,  window_w, window_h, "SAPPER" }
     , flags_counter{ size_easy_bombs }
@@ -36,30 +37,6 @@ Sapper::Sapper(Graph_lib::Point p)
     attach(game_time);
     new_game_show();
     new_game(size_easy);
-}
-
-void Sapper::set_bombs (int num_of_bombs, int ii, int jj)
-{                 //only for vector with "clear" elements!
-  if (num_of_bombs < 0) throw std::runtime_error{ "too few bombs" };
-
-  int n{ cells.size() };
-  int counter{ 0 };
-  flags_counter = num_of_bombs;
-
-  std::srand(time(0));
-
-  while (counter < num_of_bombs)
-  {
-    int i{ rand() % n };
-    int j{ rand() % n };
-    if (i == ii && j == jj) continue;
-    if (!cells[i][j].is_bombed())
-    {
-      cells[i][j].set_bomb(true);
-      update_cells_around(i, j);
-      ++counter;
-    }
-  }
 }
 
 
@@ -93,6 +70,7 @@ void Sapper::cb_size_hard (void*, void* win)
   Graph_lib::reference_to<Sapper>(win).new_game(size_hard);
 }
 
+
 void Sapper::new_game_menu ()
 {
   if (game_time.clock_launched)
@@ -111,6 +89,54 @@ void Sapper::new_game_show ()
   btn_size_hard.hide();
 }
 
+void Sapper::set_bombs (int num_of_bombs, int ii, int jj)
+{                 //only for vector with "clear" elements!
+  if (num_of_bombs < 0) throw std::runtime_error{ "too few bombs" };
+
+  int n{ cells.size() };
+  int counter{ 0 };
+  flags_counter = num_of_bombs;
+
+  std::srand(time(0));
+
+  while (counter < num_of_bombs)
+  {
+    int i{ rand() % n };
+    int j{ rand() % n };
+    if (i == ii && j == jj) continue;
+    if (!cells[i][j].is_bombed())
+    {
+      cells[i][j].set_bomb(true);
+      update_cells_around(i, j);
+      ++counter;
+    }
+  }
+}
+
+void Sapper::resize_window (int w, int h, int n)
+{
+  resize(w, h);
+  size_range(w, h, w, h);
+
+  btn_new_game.resize(button_w, button_h);
+  btn_new_game.move(-btn_new_game.loc.x + (margin_lr + cell_size*n + (sidebar_w - button_w) / 2),
+                    -btn_new_game.loc.y + (margin_tb + button_w));
+  btn_quit.resize(button_w, button_h);
+  btn_quit.move(-btn_quit.loc.x + (margin_lr + cell_size * n + (sidebar_w - button_w) / 2),
+                -btn_quit.loc.y + (y_max() - margin_tb - button_h));
+  btn_size_easy.resize(button_w/3, button_h);
+  btn_size_normal.resize(button_w/3, button_h);
+  btn_size_hard.resize(button_w/3, button_h);
+  btn_size_easy.move(-btn_size_easy.loc.x + btn_new_game.loc.x,
+                     -btn_size_easy.loc.y + btn_new_game.loc.y);
+  btn_size_normal.move(-btn_size_normal.loc.x + btn_new_game.loc.x + button_w / 3,
+                       -btn_size_normal.loc.y + btn_new_game.loc.y);
+  btn_size_hard.move(-btn_size_hard.loc.x + btn_new_game.loc.x + button_w / 3 * 2,
+                     -btn_size_hard.loc.y + btn_new_game.loc.y);
+  game_time.resize(button_w, button_h);
+  game_time.move(-game_time.loc.x + x_max()-(sidebar_w - button_w) / 2 - button_w,
+                 -game_time.loc.y + margin_tb);
+}
 
 void Sapper::new_game(int n)
 {
@@ -120,28 +146,7 @@ void Sapper::new_game(int n)
 
   int hh{ cell_size*n + 2*margin_tb};
   int ww{ cell_size*n + margin_lr + sidebar_w};
-
-  resize(ww, hh);
-  size_range(ww, hh, ww, hh);
-
-  btn_new_game.get_pw()->size(button_w, button_h);
-  btn_new_game.move(-btn_new_game.loc.x + (margin_lr + cell_size*n + (sidebar_w - button_w) / 2),
-                    -btn_new_game.loc.y + (margin_tb + button_w));
-  btn_quit.get_pw()->size(button_w, button_h);
-  btn_quit.move(-btn_quit.loc.x + (margin_lr + cell_size * n + (sidebar_w - button_w) / 2),
-                    -btn_quit.loc.y + (y_max() - margin_tb - button_h));
-  btn_size_easy.get_pw()->size(button_w/3, button_h);
-  btn_size_normal.get_pw()->size(button_w/3, button_h);
-  btn_size_hard.get_pw()->size(button_w/3, button_h);
-  btn_size_easy.move(-btn_size_easy.loc.x + btn_new_game.loc.x,
-                    -btn_size_easy.loc.y + btn_new_game.loc.y);
-  btn_size_normal.move(-btn_size_normal.loc.x + btn_new_game.loc.x + button_w / 3,
-                    -btn_size_normal.loc.y + btn_new_game.loc.y);
-  btn_size_hard.move(-btn_size_hard.loc.x + btn_new_game.loc.x + button_w / 3 * 2,
-                    -btn_size_hard.loc.y + btn_new_game.loc.y);
-  game_time.get_pw()->size(button_w, button_h);
-  game_time.move(-game_time.loc.x + x_max()-(sidebar_w - button_w) / 2 - button_w,
-                 -game_time.loc.y + margin_tb);
+  resize_window(ww, hh, n);
   new_game_show();
 
   for (int i{ 0 }; i < cells.size(); ++i)
@@ -164,9 +169,10 @@ void Sapper::new_game(int n)
     }
   }
 
-  if (n == size_easy or n == 9) num_of_bombs = size_easy_bombs;
+  if (n == size_easy)   num_of_bombs = size_easy_bombs;
   if (n == size_normal) num_of_bombs = size_normal_bombs;
-  if (n == size_hard) num_of_bombs = size_hard_bombs;
+  if (n == size_hard)   num_of_bombs = size_hard_bombs;
+
   std::string n1{ img_lib + str(num_of_bombs/10) + ".png" };
   std::string n2{ img_lib + str(num_of_bombs%10) + ".png" };
   set_img(n1, Image_type::first_flag_sign);
@@ -177,7 +183,6 @@ void Sapper::quit ()
 {
   hide();
 }
-
 
 void Sapper::clicked (void *widget)
 {
@@ -202,8 +207,8 @@ void Sapper::clicked (void *widget)
     set_img(n2, Image_type::second_flag_sign);
   }
 
-  if (c.is_opened()) return;
-  if (click == 3)
+  if (c.is_opened()) return; // do nothing when click on opened btn
+  if (click == 3) // if clicked right mouse button
   {
     if (flags_counter == 0 && !c.is_flaged()) return;
     c.set_flag(!c.is_flaged());
@@ -224,7 +229,7 @@ void Sapper::clicked (void *widget)
     set_img(n1, Image_type::first_flag_sign);
     set_img(n2, Image_type::second_flag_sign);
   }
-  if (click == 1)
+  if (click == 1) // if clicked left mouse button
   {
     if (c.is_flaged()) return;
     if (c.is_bombed())
@@ -402,39 +407,32 @@ void Sapper::open_area (int i, int j)
       {
         case 1:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"1.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 2:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"2.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 3:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"3.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 4:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"4.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 5:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"5.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 6:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"6.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 7:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"7.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         case 8:
           cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"8.png");
-          attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
           break;
         default:
           throw std::runtime_error{"image didn't pushed"};
         }
+        attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
         redraw();
         continue;
       }

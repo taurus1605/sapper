@@ -1,5 +1,6 @@
 ﻿#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#define CONSTANTS_H 1
+
 
 #include <string>
 

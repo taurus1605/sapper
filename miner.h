@@ -1,5 +1,5 @@
 ﻿#ifndef MINER_H
-#define MINER_H
+#define MINER_H 1
 
 
 #include "constants.h"
@@ -13,7 +13,6 @@
 #include <string>
 #include <tuple>
 #include <vector>
-
 
 
 enum class Image_type
@@ -39,11 +38,11 @@ private:
   bool first_click{true};
 
   Vector_ref_cl<Vector_ref_cl<Cell> > cells;
-  Button_with_pw btn_quit;
-  Button_with_pw btn_new_game;
-  Button_with_pw btn_size_easy;
-  Button_with_pw btn_size_normal;
-  Button_with_pw btn_size_hard;
+  Button_resizable btn_quit;
+  Button_resizable btn_new_game;
+  Button_resizable btn_size_easy;
+  Button_resizable btn_size_normal;
+  Button_resizable btn_size_hard;
   Graph_lib::Image* first_flag_counter{nullptr};
   Graph_lib::Image* second_flag_counter{nullptr};
   Clock_shape game_time;
@@ -57,6 +56,7 @@ private:
   void new_game_show ();
   void update_cells_around (int, int);
   void open_area (int i, int j);
+  void resize_window (int w, int h, int n);
 
   static void cb_clicked(void* widget, void* win);
   static void cb_new_game(void* widget, void* win);
