@@ -67,7 +67,4 @@ private:
 };
 
 
-bool is_consist (std::vector<std::tuple<int, int> >& v, std::tuple<int, int> el);
-
-
 #endif // MINER_H

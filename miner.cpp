@@ -369,30 +369,16 @@ void Sapper::set_img (std::string str, Image_type imgt)
   }
 }
 
-bool is_consist (std::vector<std::tuple<int, int> >& v, std::tuple<int, int> el)
-{
-  for (size_t i{0}; i < v.size(); ++i)
-  {
-    if (std::get<0>(v[i]) == std::get<0>(el) && std::get<1>(v[i]) == std::get<1>(el))
-       return true;
-  }
-  return false;
-}
-
 void Sapper::open_area (int i, int j)
 {
   std::vector<std::tuple<int, int> > queue;
-  std::vector<std::tuple<int, int> > visited;
   queue.push_back(std::make_tuple(i, j));
-  int field_size = cells[0].size();
+  int field_size = cells.size();
 
   while (queue.size())
   {
     std::tuple<int, int> cur{ queue[queue.size()-1] };
     queue.pop_back();
-
-    if (!is_consist(queue, cur))
-      visited.push_back(cur);
 
     if (cells[std::get<0>(cur)][std::get<1>(cur)].is_bombed() ||
       cells[std::get<0>(cur)][std::get<1>(cur)].is_opened() ||
@@ -444,31 +430,31 @@ void Sapper::open_area (int i, int j)
 
       if (std::get<0>(cur) > 0)
       {
-        if (!is_consist(visited, std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur))))
+        if (!cells[std::get<0>(cur) - 1][std::get<1>(cur)].is_opened())
           queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur)));
         if (std::get<1>(cur) > 0)
-          if (!is_consist(visited, std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) - 1)))
+          if (!cells[std::get<0>(cur) - 1][std::get<1>(cur) - 1].is_opened())
             queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) - 1));
         if (std::get<1>(cur) < field_size - 1)
-          if (!is_consist(visited, std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) + 1)))
+          if (!cells[std::get<0>(cur) - 1][std::get<1>(cur) + 1].is_opened())
             queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) + 1));
       }
       if (std::get<0>(cur) < field_size - 1)
       {
-        if (!is_consist(visited, std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur))))
+        if (!cells[std::get<0>(cur) + 1][std::get<1>(cur)].is_opened())
           queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur)));
         if (std::get<1>(cur) > 0)
-          if (!is_consist(visited, std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) - 1)))
+          if (!cells[std::get<0>(cur) + 1][std::get<1>(cur) - 1].is_opened())
             queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) - 1));
-      if (std::get<1>(cur) < field_size - 1)
-        if (!is_consist(visited, std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) + 1)))
-          queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) + 1));
+        if (std::get<1>(cur) < field_size - 1)
+          if (!cells[std::get<0>(cur) + 1][std::get<1>(cur) + 1].is_opened())
+            queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) + 1));
       }
       if (std::get<1>(cur) > 0)
-        if (!is_consist(visited, std::make_tuple(std::get<0>(cur), std::get<1>(cur) - 1)))
+        if (!cells[std::get<0>(cur)][std::get<1>(cur) - 1].is_opened())
           queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur), std::get<1>(cur) - 1));
       if (std::get<1>(cur) < field_size - 1)
-        if (!is_consist(visited, std::make_tuple(std::get<0>(cur), std::get<1>(cur) + 1)))
+        if (!cells[std::get<0>(cur)][std::get<1>(cur) + 1].is_opened())
           queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur), std::get<1>(cur) + 1));
   }
 }
