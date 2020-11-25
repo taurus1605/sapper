@@ -5,8 +5,7 @@
 #include <vector>
 #include <functional>
 
-#include "../_lib/Graph_lib/fltk.h"
-#include "../_lib/Graph_lib/Point.h"
+#include "libs.h"
 
 
 //class Cell_vector : private Graph_lib::Vector_ref<Cell>

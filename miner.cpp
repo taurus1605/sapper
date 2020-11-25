@@ -6,6 +6,7 @@
 #include <vector>
 #include <tuple>
 #include <sstream>
+#include <queue>
 
 
 std::string str (int i)
@@ -371,90 +372,66 @@ void Sapper::set_img (std::string str, Image_type imgt)
 
 void Sapper::open_area (int i, int j)
 {
-  std::vector<std::tuple<int, int> > queue;
-  queue.push_back(std::make_tuple(i, j));
+  std::queue<std::tuple<int, int> > queue;
+  queue.push(std::make_tuple(i, j));
   int field_size = cells.size();
 
   while (queue.size())
   {
-    std::tuple<int, int> cur{ queue[queue.size()-1] };
-    queue.pop_back();
+    std::tuple<int, int> cur{ queue.front() };
+    int i{ std::get<0>(cur) }, j{ std::get<1>(cur) };
+    queue.pop();
 
-    if (cells[std::get<0>(cur)][std::get<1>(cur)].is_bombed() ||
-      cells[std::get<0>(cur)][std::get<1>(cur)].is_opened() ||
-      cells[std::get<0>(cur)][std::get<1>(cur)].is_flaged())
+    bool skip_cell{ cells[i][j].is_bombed() || cells[i][j].is_opened() || cells[i][j].is_flaged() };
+
+    if (skip_cell)
       continue;
 
-    cells[std::get<0>(cur)][std::get<1>(cur)].set_open();
+    cells[i][j].set_open();
 
-    if (cells[std::get<0>(cur)][std::get<1>(cur)].bombs_around > 0)
+    if (cells[i][j].bombs_around > 0)
     {
-      switch (cells[std::get<0>(cur)][std::get<1>(cur)].bombs_around)
+      if (cells[i][j].bombs_around >= 1 && cells[i][j].bombs_around <= 8)
       {
-        case 1:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"1.png");
-          break;
-        case 2:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"2.png");
-          break;
-        case 3:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"3.png");
-          break;
-        case 4:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"4.png");
-          break;
-        case 5:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"5.png");
-          break;
-        case 6:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"6.png");
-          break;
-        case 7:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"7.png");
-          break;
-        case 8:
-          cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_lib+"8.png");
-          break;
-        default:
-          throw std::runtime_error{"image didn't pushed"};
-        }
-        attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
-        redraw();
-        continue;
+        cells[i][j].set_img(img_lib + str(cells[i][j].bombs_around) + ".png");
       }
-      else
-      {
-        cells[std::get<0>(cur)][std::get<1>(cur)].set_img(img_btn_pushed);
-        attach(*cells[std::get<0>(cur)][std::get<1>(cur)].img_ptr);
-      }
+      attach(*cells[i][j].img_ptr);
+      redraw();
+      continue;
+    }
+    else
+    {
+      cells[i][j].set_img(img_btn_pushed);
+      attach(*cells[i][j].img_ptr);
+    }
 
-      if (std::get<0>(cur) > 0)
-      {
-        if (!cells[std::get<0>(cur) - 1][std::get<1>(cur)].is_opened())
-          queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur)));
-        if (std::get<1>(cur) > 0)
-          if (!cells[std::get<0>(cur) - 1][std::get<1>(cur) - 1].is_opened())
-            queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) - 1));
-        if (std::get<1>(cur) < field_size - 1)
-          if (!cells[std::get<0>(cur) - 1][std::get<1>(cur) + 1].is_opened())
-            queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) - 1, std::get<1>(cur) + 1));
-      }
-      if (std::get<0>(cur) < field_size - 1)
-      {
-        if (!cells[std::get<0>(cur) + 1][std::get<1>(cur)].is_opened())
-          queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur)));
-        if (std::get<1>(cur) > 0)
-          if (!cells[std::get<0>(cur) + 1][std::get<1>(cur) - 1].is_opened())
-            queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) - 1));
-        if (std::get<1>(cur) < field_size - 1)
-          if (!cells[std::get<0>(cur) + 1][std::get<1>(cur) + 1].is_opened())
-            queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur) + 1, std::get<1>(cur) + 1));
-      }
-      if (std::get<1>(cur) > 0)
-        if (!cells[std::get<0>(cur)][std::get<1>(cur) - 1].is_opened())
-          queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur), std::get<1>(cur) - 1));
-      if (std::get<1>(cur) < field_size - 1)
-        if (!cells[std::get<0>(cur)][std::get<1>(cur) + 1].is_opened())
-          queue.insert(queue.begin(), std::make_tuple(std::get<0>(cur), std::get<1>(cur) + 1));
+    if (i > 0)
+    {
+      if (!cells[i - 1][j].is_opened())
+        queue.push(std::make_tuple(i - 1, j));
+      if (j > 0)
+        if (!cells[i - 1][j - 1].is_opened())
+          queue.push(std::make_tuple(i - 1, j - 1));
+      if (j < field_size - 1)
+        if (!cells[i - 1][j + 1].is_opened())
+          queue.push(std::make_tuple(i - 1, j + 1));
+    }
+    if (i < field_size - 1)
+    {
+      if (!cells[i + 1][j].is_opened())
+        queue.push(std::make_tuple(i + 1, j));
+      if (j > 0)
+        if (!cells[i + 1][j - 1].is_opened())
+          queue.push(std::make_tuple(i + 1, j - 1));
+      if (j < field_size - 1)
+        if (!cells[i + 1][j + 1].is_opened())
+          queue.push(std::make_tuple(i + 1, j + 1));
+    }
+    if (j > 0)
+      if (!cells[i][j - 1].is_opened())
+        queue.push(std::make_tuple(i, j - 1));
+    if (j < field_size - 1)
+      if (!cells[i][j + 1].is_opened())
+        queue.push(std::make_tuple(i, j + 1));
   }
 }

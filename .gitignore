@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -32,7 +32,7 @@
 *.app
 
 config.h
-lib.h
+libs.h
 *.qbs
 *.qbs.user
 *.autosave

@@ -2,13 +2,11 @@
 #define MINER_H 1
 
 
+#include "libs.h"
 #include "constants.h"
 #include "cell.h"
 #include "clock_shape.h"
 #include "vector_ref_cl.h"
-
-#include "../_lib/Graph_lib/GUI.h"
-#include "../_lib/Graph_lib/Graph.h"
 
 #include <string>
 #include <tuple>

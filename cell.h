@@ -2,9 +2,7 @@
 #define CELL_H 1
 
 
-#include "../_lib/Graph_lib/Graph.h"
-#include "../_lib/Graph_lib/Window.h"
-#include "../_lib/Graph_lib/GUI.h"
+#include "libs.h"
 
 #include <string>
 
